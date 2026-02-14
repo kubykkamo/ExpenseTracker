@@ -9,5 +9,6 @@ public enum Category
     Entertainment,
     EverydaySpendings,
     Personal,
-    Transport
+    Transport,
+    Income
 }

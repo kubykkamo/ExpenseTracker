@@ -7,27 +7,27 @@ namespace Expense_Tracker;
 
 public class Account
 {
-    private List<Transaction> _transactions = new List<Transaction>();
+    private List<Transaction> transactions = new List<Transaction>();
 
 
     public List<Transaction> getAllTransactions() 
     {
 
-        return _transactions;
+        return transactions;
     }
     public void AddTransaction(string desc, decimal amount, bool isIncome, Category category) 
     {
         var transaction = new Transaction(desc, amount, isIncome, category);
-        _transactions.Add(transaction);
-        Console.WriteLine("Transaction added.");
+        transactions.Add(transaction);
+        ConsoleHelper.WriteSuccess("Transaction added.");
     }
     public string _accountName { get; set; }
-    public decimal TotalIncome => _transactions
-        .Where(t => t._IsIncome == true)
-        .Sum(t => t._Amount);
-    public decimal TotalOutcome => _transactions
-        .Where(t => t._IsIncome == false)
-        .Sum(t => t._Amount);
+    public decimal TotalIncome => transactions
+        .Where(t => t.IsIncome == true)
+        .Sum(t => t.Amount);
+    public decimal TotalOutcome => transactions
+        .Where(t => t.IsIncome == false)
+        .Sum(t => t.Amount);
     public decimal Balance => TotalIncome - TotalOutcome;
                
                                     

@@ -6,30 +6,30 @@ namespace Expense_Tracker;
 
 public class ExpenseTrackerApp
 {
-    private Account _account = new Account("Petr Pavel");
+    private Account account = new Account("Petr Pavel");
 
     public void Run()
     {
         Console.WriteLine("--- Welcome in your expense tracker! ---");
         while (true)
         {
-            Console.WriteLine("Choose an action: (1. Add Transaction, 2. All Transactions, 3. Account Information q. Exit)");
-            string input = Console.ReadLine() ?? "";
-            if (input == "q") break;
+            int input = ConsoleHelper.GetInputNumber("Choose an action: (1. Add Transaction | 2. All Transactions | 3. Account Information | q Exit)");
+
+            if (input == -1) break; ;
             switch (input)
             {
-                case "1":
+                case 1:
                     AddTransaction();
                     break;
-                case "2":
+                case 2:
                     PrintTransactions();
                     break;
-                case "3":
+                case 3:
                     PrintAccountStatus();
                     break;
                 
                 default:
-                    Console.WriteLine("Wrong input");
+                    ConsoleHelper.WriteError("Wrong input");
                     continue;
 
 
@@ -57,6 +57,11 @@ public class ExpenseTrackerApp
         {
             Console.Write("Is it an income? (y/n) ");
             bool isIncome = Console.ReadLine() == "y";
+            if (isIncome)
+            {
+
+                account.AddTransaction(desc, amount, isIncome, Category.Income);
+            }
 
             
             if (!isIncome) 
@@ -72,7 +77,7 @@ public class ExpenseTrackerApp
                     if (Enum.IsDefined(typeof(Category), indexChoice))
                     {
                         Category chosenCategory = (Category)indexChoice;
-                        _account.AddTransaction(desc, amount, isIncome, chosenCategory);
+                        account.AddTransaction(desc, amount, isIncome, chosenCategory);
                     }
                     else
                     {
@@ -100,10 +105,11 @@ public class ExpenseTrackerApp
 
     private void PrintTransactions()
     {
-        var list = _account.getAllTransactions();
+        var list = account.getAllTransactions();
+        if (!list.Any()) ConsoleHelper.WriteError("No transactions yet.");
         foreach (var t in list)
         {
-            Console.WriteLine($"{t._Date.ToShortDateString()} | {t._Description} | {t._Amount} Kč | {t._Category} ");
+            Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
 
         }
 
@@ -111,10 +117,10 @@ public class ExpenseTrackerApp
 
     private void PrintAccountStatus()
     {
-        Console.WriteLine($"Name: {_account._accountName}");
-        Console.WriteLine($"Balance: {_account.Balance} kč.");
-        Console.WriteLine($"Total income: {_account.TotalIncome} kč.");
-        Console.WriteLine($"Total outcome: {_account.TotalOutcome} kč. ");
+        Console.WriteLine($"Name: {account._accountName}");
+        Console.WriteLine($"Balance: {account.Balance} kč.");
+        Console.WriteLine($"Total income: {account.TotalIncome} kč.");
+        Console.WriteLine($"Total outcome: {account.TotalOutcome} kč. ");
             
     }
 

@@ -6,18 +6,18 @@ namespace Expense_Tracker;
 
 public class Transaction
 {
-    public string _Description { get; set; }
-    public decimal _Amount { get; set; }
-    public DateTime _Date { get; set; }
-    public bool _IsIncome { get; set; }
-    public Category _Category { get; set; }
+    public string Description { get; set; }
+    public decimal Amount { get; set; }
+    public DateTime Date { get; set; }
+    public bool IsIncome { get; set; }
+    public Category Category { get; set; }
 
     public Transaction(string description, decimal amount, bool isIncome, Category category)
     {
-        _Description = description;
-        _Amount = amount;
-        _Date = DateTime.Now;
-        _IsIncome = isIncome;
-        _Category = category;
+        Description = description;
+        Amount = amount;
+        Date = DateTime.Now;
+        IsIncome = isIncome;
+        Category = category;
     }
 }
