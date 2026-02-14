@@ -33,6 +33,27 @@ namespace Expense_Tracker
                 ConsoleHelper.WriteError("Invalid input, enter a number!");
             }
         }
+
+        static public decimal GetInputDecimal(string question)
+        {
+
+            while (true)
+            {
+                string input = ConsoleHelper.GetInputString(question);
+                if (input == "q" || input == "Q")
+                {
+                    return -1;
+                }
+
+
+                if (decimal.TryParse(input, out decimal number))
+                {
+                    return number;
+                }
+
+                ConsoleHelper.WriteError("Invalid input, enter a number!");
+            }
+        }
         public static void WriteSuccess(string successMessge)
         {
             Console.ForegroundColor = ConsoleColor.Green;

@@ -15,7 +15,7 @@ public class ExpenseTrackerApp
         {
             int input = ConsoleHelper.GetInputNumber("Choose an action: (1. Add Transaction | 2. All Transactions | 3. Account Information | q Exit)");
 
-            if (input == -1) break; ;
+            
             switch (input)
             {
                 case 1:
@@ -27,7 +27,8 @@ public class ExpenseTrackerApp
                 case 3:
                     PrintAccountStatus();
                     break;
-                
+                case -1:
+                    return;
                 default:
                     ConsoleHelper.WriteError("Wrong input");
                     continue;
@@ -51,7 +52,7 @@ public class ExpenseTrackerApp
     private void AddTransaction() 
     {
         string desc = ConsoleHelper.GetInputString("Enter transaction description");
-        int amount = ConsoleHelper.GetInputNumber("Enter transaction amount");
+        decimal amount = ConsoleHelper.GetInputDecimal("Enter transaction amount");
         
         
             Console.Write("Is it an income? (y/n) ");
@@ -80,7 +81,8 @@ public class ExpenseTrackerApp
                 {
                         Category chosenCategory = (Category)indexChoice;
                         account.AddTransaction(desc, amount, isIncome, chosenCategory);
-                }
+                    ConsoleHelper.WriteSuccess("Transaction added.");
+            }
                 else
                 {
                     Console.WriteLine("Error, non existing category!");
@@ -100,7 +102,7 @@ public class ExpenseTrackerApp
 
     private void PrintTransactions()
     {
-        var list = account.getAllTransactions();
+        var list = account.GetAllTransactions();
         if (!list.Any()) ConsoleHelper.WriteError("No transactions yet.");
         else
         {
@@ -129,7 +131,7 @@ public class ExpenseTrackerApp
 
     private void PrintAccountStatus()
     {
-        Console.WriteLine($"Name: {account._accountName}");
+        Console.WriteLine($"Name: {account.Name}");
         Console.WriteLine($"Balance: {account.Balance} kč.");
         Console.WriteLine($"Total income: {account.TotalIncome} kč.");
         Console.WriteLine($"Total outcome: {account.TotalOutcome} kč. ");
