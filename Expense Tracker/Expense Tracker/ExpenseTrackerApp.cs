@@ -10,7 +10,9 @@ public class ExpenseTrackerApp
 
     public void Run()
     {
+
         Console.WriteLine("--- Welcome in your expense tracker! ---");
+        
         while (true)
         {
             int input = ConsoleHelper.GetInputNumber("Choose an action: (1. Add Transaction | 2. All Transactions | 3. Account Information | q Exit)");
