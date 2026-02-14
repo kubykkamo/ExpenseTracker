@@ -50,11 +50,10 @@ public class ExpenseTrackerApp
 
     private void AddTransaction() 
     {
-        Console.Write("Enter transaction description: ");
-        string desc = Console.ReadLine() ?? "";
-        Console.Write("Enter transaction amount: ");
-        if (decimal.TryParse(Console.ReadLine(), out decimal amount))
-        {
+        string desc = ConsoleHelper.GetInputString("Enter transaction description");
+        int amount = ConsoleHelper.GetInputNumber("Enter transaction amount");
+        
+        
             Console.Write("Is it an income? (y/n) ");
             bool isIncome = Console.ReadLine() == "y";
             if (isIncome)
@@ -66,53 +65,66 @@ public class ExpenseTrackerApp
             
             if (!isIncome) 
             {
-                Console.WriteLine("Enter transaction category: ");
+                
                 var AllCategories = Enum.GetValues<Category>();
+                Console.WriteLine("---Your categories---");
                 foreach (Category k in AllCategories)
                 {
                     Console.WriteLine($"{(int)k} - {k}");
                 }
-                if (int.TryParse(Console.ReadLine(), out int indexChoice))
+            Console.WriteLine    ("---------------------");
+                int indexChoice = ConsoleHelper.GetInputNumber("Enter a category");
+
+
+            if (Enum.IsDefined(typeof(Category), indexChoice))
                 {
-                    if (Enum.IsDefined(typeof(Category), indexChoice))
-                    {
                         Category chosenCategory = (Category)indexChoice;
                         account.AddTransaction(desc, amount, isIncome, chosenCategory);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error, non existing category!");
-                    }
-                    
                 }
                 else
                 {
-                    Console.WriteLine("Error, wrong input!");
+                    Console.WriteLine("Error, non existing category!");
                 }
+                    
+
               
             }
             
         }
-        else 
-        {
-            Console.WriteLine("Wrong input!");
-        }
+        
 
         
 
 
-    }
+    
 
     private void PrintTransactions()
     {
         var list = account.getAllTransactions();
         if (!list.Any()) ConsoleHelper.WriteError("No transactions yet.");
-        foreach (var t in list)
+        else
         {
-            Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+            Console.WriteLine("--- Your transactions history ---");
+            foreach (var t in list)
+            {
+                if (t.IsIncome)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+                    Console.ResetColor();
+                }
 
+                if (!t.IsIncome)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+                    Console.ResetColor();
+                }
+
+
+            }
+            Console.WriteLine("---------------------------------");
         }
-
     }
 
     private void PrintAccountStatus()

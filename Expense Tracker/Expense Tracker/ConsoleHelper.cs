@@ -18,8 +18,7 @@ namespace Expense_Tracker
 
             while (true)
             {
-                Console.Write(question + " ");
-                string input = Console.ReadLine() ?? "";
+                string input = ConsoleHelper.GetInputString(question);
                 if (input == "q" || input == "Q")
                 {
                     return -1;
@@ -43,8 +42,18 @@ namespace Expense_Tracker
 
         public static string GetInputString(string question)
         {
-            string outpout = "";
-            return outpout;
+            while (true)
+            {
+                Console.WriteLine(question + ": ");
+                string input = Console.ReadLine() ?? "";
+
+                if (!string.IsNullOrWhiteSpace(input))
+                {
+                    return input;
+                }
+                ConsoleHelper.WriteError("Invalid input, enter a number!");
+                
+            }
         }
     }
 
