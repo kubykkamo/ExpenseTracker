@@ -20,24 +20,24 @@ public class ExpenseTrackerApp
         while (true)
         {
             Console.WriteLine("--- Main Menu ---");
-            int input = ConsoleHelper.GetInputNumber("Choose an action: (1. Add Transaction | 2. All Transactions | 3. Account Information | q Exit)");
-
+            ConsoleHelper.PrintMenuFromEnum<MainMenuOptions>();
+            Console.WriteLine("-----------------");
+            int input = ConsoleHelper.GetInputNumber("Choose an action");
+            MainMenuOptions action = (MainMenuOptions)input;
             
-            switch (input)
+            switch (action)
             {
-                case 1:
+                case MainMenuOptions.AddTransaction:
                     AddTransaction();
                     break;
-                case 2:
-                    ShowFilteredTransactions();
+                case MainMenuOptions.AllTransactions:
+                    ShowAndChooseFilter();
                     break;
-                case 3:
+                case MainMenuOptions.AccountInformation:
                     PrintAccountStatus();
                     break;
-                case 4:
-                    PrintSpecificTransactions(SortByIncome());
-                    break;
-                case -1:
+                
+                case MainMenuOptions.Quit:
                     return;
                 default:
                     ConsoleHelper.WriteError("Wrong input");
@@ -56,25 +56,42 @@ public class ExpenseTrackerApp
 
 
 
-    private void ShowFilteredTransactions()
+    private void ShowAndChooseFilter()
     {
-        int sortInput = ConsoleHelper.GetInputNumber("Choose your filter: (1. No filter | 2. Incomes first | 3. Sort from lowest) | q. Main Menu");
-        switch (sortInput)
+        bool inFilterMenu = true;
+        while (inFilterMenu)
         {
-            case 1:
-                PrintTransactions();
-                break;
-            case 2:
-                PrintSpecificTransactions(SortByIncome());
-                break;
-            case 3:
-                PrintSpecificTransactions(SortTransactions());
-                break;
-            case -1:
-                return;
-            default:
-                ConsoleHelper.WriteError("Wrong input.");
-                break;
+            
+            Console.Clear();
+            Console.WriteLine("--- Filters ---");
+            ConsoleHelper.PrintMenuFromEnum<FilterOptions>();
+            Console.WriteLine("---------------");
+            int sortInput = ConsoleHelper.GetInputNumber("Choose your filter");
+            FilterOptions action = (FilterOptions)sortInput;
+            switch (action)
+            {
+                case FilterOptions.All:
+                    PrintTransactions();
+                    break;
+                case FilterOptions.Income:
+                    PrintSpecificTransactions(SortByIncome());
+                    break;
+                case FilterOptions.ByHighest:
+                    PrintSpecificTransactions(SortTransactions());
+                    break;
+                case FilterOptions.BackToMainMenu:
+                    inFilterMenu = false;
+                    break;
+                default:
+                    ConsoleHelper.WriteError("Wrong input.");
+                    break;
+            }
+
+            if (inFilterMenu)
+            {
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
         }
     }
 

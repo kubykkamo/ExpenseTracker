@@ -76,7 +76,25 @@ namespace Expense_Tracker
                 
             }
         }
+        
+        public static void PrintMenuFromEnum<T>() where T : Enum
+        {
+            var values = Enum.GetValues(typeof(T));
+
+            foreach (var value in values)
+            {
+                int number = (int)value;
+                string name = value.ToString();
+
+                
+                string polishedName = System.Text.RegularExpressions.Regex.Replace(name, "(\\B[A-Z])", " $1");
+
+                Console.WriteLine($"{number}. {polishedName}");
+            }
+        }
     }
+
+
 
     
 }
