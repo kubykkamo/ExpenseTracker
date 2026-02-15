@@ -4,9 +4,13 @@ using System.Text;
 
 namespace Expense_Tracker;
 
+
 public class ExpenseTrackerApp
 {
     private Account account = new Account("Petr Pavel");
+    
+
+    
 
     public void Run()
     {
@@ -24,10 +28,28 @@ public class ExpenseTrackerApp
                     AddTransaction();
                     break;
                 case 2:
-                    PrintTransactions();
+                    int sortInput = ConsoleHelper.GetInputNumber("Choose your filter: (1. No filter | 2. Incomes first | 3. Sort from lowest)");
+                    switch (sortInput)
+                    { 
+                        case 1:
+                            PrintTransactions();
+                            break;
+                        case 2:
+                            PrintSpecificTransactions(SortByIncome());
+                            break;
+                        case 3:
+                            PrintSpecificTransactions(SortTransactions());
+                            break;
+                        default:
+                            ConsoleHelper.WriteError("Wrong input.");
+                            break;
+                    }
                     break;
                 case 3:
                     PrintAccountStatus();
+                    break;
+                case 4:
+                    PrintSpecificTransactions(SortByIncome());
                     break;
                 case -1:
                     return;
@@ -96,20 +118,73 @@ public class ExpenseTrackerApp
             
         }
         
-
-        
-
-
-    
-
-    private void PrintTransactions()
+    List<Transaction> GetTransactions()
     {
-        var list = account.GetAllTransactions();
-        if (!list.Any()) ConsoleHelper.WriteError("No transactions yet.");
+        return account.GetAllTransactions();
+    }
+    List<Transaction> SortTransactions()
+    {
+
+        var transactions =
+                GetTransactions()
+                .OrderBy(t => t.Amount)
+                .ToList();
+        return transactions;
+    }
+
+    List<Transaction> SortByIncome()  
+    {
+        var transactions = GetTransactions()
+            .GroupBy(t => t.IsIncome)
+            .SelectMany(g => g.OrderByDescending(t => t.Date))
+            .ToList();
+        return transactions;
+    }
+
+
+
+
+    private void PrintSpecificTransactions(List<Transaction> transactionsToPrint)
+    {
+        account.GetAllTransactions();
+        if (!transactionsToPrint.Any()) ConsoleHelper.WriteError("No transactions yet.");
         else
         {
             Console.WriteLine("--- Your transactions history ---");
-            foreach (var t in list)
+            foreach (var t in transactionsToPrint)
+            {
+                if (t.IsIncome)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+                    Console.ResetColor();
+                }
+
+                if (!t.IsIncome)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+                    Console.ResetColor();
+                }
+
+
+            }
+            Console.WriteLine("---------------------------------");
+        }
+    }
+
+    private void PrintTransactions()
+    {
+        var transactions = account.GetAllTransactions();
+        if (!transactions.Any()) { ConsoleHelper.WriteError("No transactions yet."); } 
+       
+        else
+        {
+            var transactionsToPrint = transactions
+            .OrderByDescending(t => t.Date)
+            .ToList();
+            Console.WriteLine("--- Your transactions history ---");
+            foreach (var t in transactionsToPrint)
             {
                 if (t.IsIncome)
                 {
