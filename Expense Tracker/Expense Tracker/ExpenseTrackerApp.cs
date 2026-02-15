@@ -7,14 +7,13 @@ namespace Expense_Tracker;
 
 public class ExpenseTrackerApp
 {
-    private Account account = new Account("Petr Pavel");
+    public Account account = new Account("Petr Pavel");
     
 
     
 
     public void Run()
     {
-
         Console.WriteLine("--- Welcome in your expense tracker! ---");
         
         while (true)
@@ -100,44 +99,42 @@ public class ExpenseTrackerApp
     {
         string desc = ConsoleHelper.GetInputString("Enter transaction description");
         decimal amount = ConsoleHelper.GetInputDecimal("Enter transaction amount");
+        bool isIncome;
+
         
-        
-            Console.Write("Is it an income? (y/n) ");
-            bool isIncome = Console.ReadLine() == "y";
-            if (isIncome)
+        string incomeInput = ConsoleHelper.GetInputString(("Is it an income? (y/n)")).ToLower();
+        if (incomeInput != "y" && incomeInput != "n")
+        {
+            ConsoleHelper.WriteError("Wrong input. Transaction not added.");
+
+        }
+        else
+        {
+            isIncome = incomeInput == "y";
+
+
+            var categories = account.Categories;
+            account.PrintCategories();
+
+
+            int indexChoice = ConsoleHelper.GetInputNumber("Enter a category");
+            indexChoice--;
+            if (indexChoice < 0 || indexChoice >= categories.Count)
             {
-
-                account.AddTransaction(desc, amount, isIncome, Category.Income);
+                ConsoleHelper.WriteError("Wrong input. Transaction not added.");
+                return;
             }
 
-            
-            if (!isIncome) 
-            {
-                
-                var AllCategories = Enum.GetValues<Category>();
-                Console.WriteLine("---Your categories---");
-                foreach (Category k in AllCategories)
-                {
-                    Console.WriteLine($"{(int)k} - {k}");
-                }
-            Console.WriteLine    ("---------------------");
-                int indexChoice = ConsoleHelper.GetInputNumber("Enter a category");
+            Category chosenCategory = categories[indexChoice];
 
 
-            if (Enum.IsDefined(typeof(Category), indexChoice))
-                {
-                        Category chosenCategory = (Category)indexChoice;
-                        account.AddTransaction(desc, amount, isIncome, chosenCategory);
-                    ConsoleHelper.WriteSuccess("Transaction added.");
-            }
-                else
-                {
-                    Console.WriteLine("Error, non existing category!");
-                }
-                    
+            account.AddTransaction(desc, amount, isIncome, chosenCategory);
+            ConsoleHelper.WriteSuccess("Transaction added.");
 
-              
-            }
+
+
+
+        }
             
         }
         
@@ -150,7 +147,7 @@ public class ExpenseTrackerApp
 
         var transactions =
                 GetTransactions()
-                .OrderBy(t => t.Amount)
+                .OrderByDescending(t => t.Amount)
                 .ToList();
         return transactions;
     }
@@ -164,6 +161,7 @@ public class ExpenseTrackerApp
         return transactions;
     }
 
+    
 
 
 

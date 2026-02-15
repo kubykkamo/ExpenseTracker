@@ -5,4 +5,4 @@ ExpenseTrackerApp app = new ExpenseTrackerApp();
 
 app.Run();
 
-Console.WriteLine("App was quit. Goodbye! ");
+Console.WriteLine("Goodbye! ");

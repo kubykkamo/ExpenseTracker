@@ -84,7 +84,7 @@ namespace Expense_Tracker
             foreach (var value in values)
             {
                 int number = (int)value;
-                string name = value.ToString();
+                string name = value.ToString() ?? "";
 
                 
                 string polishedName = System.Text.RegularExpressions.Regex.Replace(name, "(\\B[A-Z])", " $1");
