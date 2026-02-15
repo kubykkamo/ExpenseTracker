@@ -27,10 +27,10 @@ public class ExpenseTrackerApp
             
             switch (action)
             {
-                case MainMenuOptions.AddTransaction:
+                case MainMenuOptions.NewTransaction:
                     AddTransaction();
                     break;
-                case MainMenuOptions.AllTransactions:
+                case MainMenuOptions.Transactions:
                     ShowAndChooseFilter();
                     break;
                 case MainMenuOptions.AccountInformation:
@@ -70,13 +70,13 @@ public class ExpenseTrackerApp
             FilterOptions action = (FilterOptions)sortInput;
             switch (action)
             {
-                case FilterOptions.All:
+                case FilterOptions.NoFilter:
                     PrintTransactions();
                     break;
-                case FilterOptions.Income:
+                case FilterOptions.SortByIncome:
                     PrintSpecificTransactions(SortByIncome());
                     break;
-                case FilterOptions.ByHighest:
+                case FilterOptions.SortByHighest:
                     PrintSpecificTransactions(SortTransactions());
                     break;
                 case FilterOptions.BackToMainMenu:
@@ -173,20 +173,20 @@ public class ExpenseTrackerApp
         if (!transactionsToPrint.Any()) ConsoleHelper.WriteError("No transactions yet.");
         else
         {
-            Console.WriteLine("--- Your transactions history ---");
+            Console.WriteLine("--- Your transaction history ---");
             foreach (var t in transactionsToPrint)
             {
                 if (t.IsIncome)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+                    t.PrintTransactionInfo();
                     Console.ResetColor();
                 }
 
                 if (!t.IsIncome)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+                    t.PrintTransactionInfo();
                     Console.ResetColor();
                 }
 
@@ -212,14 +212,14 @@ public class ExpenseTrackerApp
                 if (t.IsIncome)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+                    t.PrintTransactionInfo();
                     Console.ResetColor();
                 }
 
                 if (!t.IsIncome)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"{t.Date.ToShortDateString()} | {t.Description} | {t.Amount} Kč | {t.Category} ");
+                    t.PrintTransactionInfo();
                     Console.ResetColor();
                 }
 

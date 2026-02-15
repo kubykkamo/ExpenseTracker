@@ -7,7 +7,7 @@ namespace Expense_Tracker;
 public enum Category
 {
     Entertainment,
-    Everyday_Spendings,
+    EverydaySpendings,
     Personal,
     Transport,
     Income

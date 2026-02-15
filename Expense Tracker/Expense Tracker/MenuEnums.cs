@@ -6,17 +6,17 @@ namespace Expense_Tracker
 {
     public enum MainMenuOptions
     {
-        AddTransaction = 1,
-        AllTransactions = 2,
+        NewTransaction = 1,
+        Transactions = 2,
         AccountInformation = 3,
         Quit = 0
     }
 
     public enum FilterOptions
     {
-        All = 1,
-        Income = 2,
-        ByHighest = 3,
+        NoFilter = 1,
+        SortByIncome = 2,
+        SortByHighest = 3,
         BackToMainMenu = 0
     }
 }

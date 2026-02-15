@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Expense_Tracker;
 
@@ -19,5 +20,13 @@ public class Transaction
         Date = DateTime.Now;
         IsIncome = isIncome;
         Category = category;
+    }
+
+    public void PrintTransactionInfo() 
+    {
+        string categoryName = Category.ToString();
+        categoryName = System.Text.RegularExpressions.Regex.Replace(categoryName, "(\\B[A-Z])", " $1");
+        Console.WriteLine($"{Date.ToShortDateString()} | {Description} | {Amount} Kč | {categoryName} ");
+
     }
 }
