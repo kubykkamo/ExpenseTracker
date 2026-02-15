@@ -19,6 +19,7 @@ public class ExpenseTrackerApp
         
         while (true)
         {
+            Console.WriteLine("--- Main Menu ---");
             int input = ConsoleHelper.GetInputNumber("Choose an action: (1. Add Transaction | 2. All Transactions | 3. Account Information | q Exit)");
 
             
@@ -28,22 +29,7 @@ public class ExpenseTrackerApp
                     AddTransaction();
                     break;
                 case 2:
-                    int sortInput = ConsoleHelper.GetInputNumber("Choose your filter: (1. No filter | 2. Incomes first | 3. Sort from lowest)");
-                    switch (sortInput)
-                    { 
-                        case 1:
-                            PrintTransactions();
-                            break;
-                        case 2:
-                            PrintSpecificTransactions(SortByIncome());
-                            break;
-                        case 3:
-                            PrintSpecificTransactions(SortTransactions());
-                            break;
-                        default:
-                            ConsoleHelper.WriteError("Wrong input.");
-                            break;
-                    }
+                    ShowFilteredTransactions();
                     break;
                 case 3:
                     PrintAccountStatus();
@@ -70,7 +56,27 @@ public class ExpenseTrackerApp
 
 
 
-
+    private void ShowFilteredTransactions()
+    {
+        int sortInput = ConsoleHelper.GetInputNumber("Choose your filter: (1. No filter | 2. Incomes first | 3. Sort from lowest) | q. Main Menu");
+        switch (sortInput)
+        {
+            case 1:
+                PrintTransactions();
+                break;
+            case 2:
+                PrintSpecificTransactions(SortByIncome());
+                break;
+            case 3:
+                PrintSpecificTransactions(SortTransactions());
+                break;
+            case -1:
+                return;
+            default:
+                ConsoleHelper.WriteError("Wrong input.");
+                break;
+        }
+    }
 
 
     private void AddTransaction() 
