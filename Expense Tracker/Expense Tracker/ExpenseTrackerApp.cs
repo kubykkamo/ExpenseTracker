@@ -42,6 +42,7 @@ public class ExpenseTrackerApp
                     break;
                 
                 
+                
                 case MainMenuOptions.Quit:
                     account.SaveToFile();
                     return;
@@ -84,6 +85,9 @@ public class ExpenseTrackerApp
                     break;
                 case FilterOptions.SortByHighest:
                     PrintSpecificTransactions(SortTransactions());
+                    break;
+                case FilterOptions.SortByCategory:
+                    PrintFilteredTransactions();
                     break;
                 case FilterOptions.BackToMainMenu:
                     inFilterMenu = false;
@@ -209,7 +213,21 @@ public class ExpenseTrackerApp
         return transactions;
     }
 
-    
+
+    private void PrintFilteredTransactions()
+    {
+        Category chosenCategory = ChooseCategory();
+        if (chosenCategory == null)
+        {
+            return;
+        }
+        
+        var transactionsToPrint = account.GetAllTransactions()
+            .Where(t => t.Category.Name == chosenCategory.Name)
+            .OrderByDescending(t => t.Date)
+            .ToList();
+        PrintSpecificTransactions(transactionsToPrint);
+    }
 
 
 

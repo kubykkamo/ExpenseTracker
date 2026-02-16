@@ -72,7 +72,7 @@ namespace Expense_Tracker
                 {
                     return input;
                 }
-                ConsoleHelper.WriteError("Invalid input, enter a number!");
+                ConsoleHelper.WriteError("Empty input!");
                 
             }
         }

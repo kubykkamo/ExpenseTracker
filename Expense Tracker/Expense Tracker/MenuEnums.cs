@@ -19,6 +19,7 @@ namespace Expense_Tracker
         NoFilter = 1,
         SortByIncome = 2,
         SortByHighest = 3,
+        SortByCategory = 4,
         BackToMainMenu = 0
     }
 }
