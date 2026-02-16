@@ -92,6 +92,38 @@ namespace Expense_Tracker
                 Console.WriteLine($"{number}. {polishedName}");
             }
         }
+
+        public enum CategoryColors 
+        {
+            Red = 1,
+            Green,
+            Blue,
+            Yellow,
+            Cyan,       // Azurová (světle modrá)
+            Magenta,    // Fialová
+            White,
+            Purple,
+            Pink,  
+            Gray        // Šedá (pro méně důležité věci)
+        }
+
+        public static ConsoleColor ToConsoleColor(CategoryColors categoryColor)
+        {
+            return categoryColor switch
+            {
+                CategoryColors.Red => ConsoleColor.Red,
+                CategoryColors.Green => ConsoleColor.Green,
+                CategoryColors.Blue => ConsoleColor.Blue,
+                CategoryColors.Yellow => ConsoleColor.Yellow,
+                CategoryColors.Cyan => ConsoleColor.Cyan,
+                CategoryColors.Magenta => ConsoleColor.Magenta,
+                CategoryColors.White => ConsoleColor.White,
+                CategoryColors.Purple => ConsoleColor.DarkMagenta,
+                CategoryColors.Pink => ConsoleColor.Magenta,
+                CategoryColors.Gray => ConsoleColor.Gray,
+                _ => ConsoleColor.White
+            };
+        }
     }
 
 

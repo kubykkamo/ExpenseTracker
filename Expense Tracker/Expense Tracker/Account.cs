@@ -56,7 +56,7 @@ public class Account
 
 
 
-    private void SaveToFile()
+    public void SaveToFile()
     {
        
         var jsonData = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });

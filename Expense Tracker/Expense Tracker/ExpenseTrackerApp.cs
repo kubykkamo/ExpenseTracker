@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Expense_Tracker;
@@ -29,6 +30,9 @@ public class ExpenseTrackerApp
                 case MainMenuOptions.NewTransaction:
                     AddTransaction();
                     break;
+                case MainMenuOptions.NewCategory:
+                    AddCateogry();
+                    break;
                 case MainMenuOptions.Transactions:
                     ShowAndChooseFilter();
                     break;
@@ -36,7 +40,9 @@ public class ExpenseTrackerApp
                     PrintAccountStatus();
                     break;
                 
+                
                 case MainMenuOptions.Quit:
+                    account.SaveToFile();
                     return;
                 default:
                     ConsoleHelper.WriteError("Wrong input");
@@ -94,7 +100,40 @@ public class ExpenseTrackerApp
         }
     }
 
+    void AddCateogry()
+    {
+        string categoryName = ConsoleHelper.GetInputString("Enter category name");
 
+        ConsoleHelper.PrintMenuFromEnum<ConsoleHelper.CategoryColors>();
+        int categoryColor = ConsoleHelper.GetInputNumber("Enter category color");
+        ConsoleHelper.CategoryColors selectedEnum = (ConsoleHelper.CategoryColors)categoryColor;
+        ConsoleColor finalColor = ConsoleHelper.ToConsoleColor(selectedEnum);
+        string incomeBool = ConsoleHelper.GetInputString("Is it an income category? (y/n)").ToLower();
+        bool isIncome;
+        if (incomeBool == "y")
+        {
+            isIncome = true;
+        }
+        else if (incomeBool == "n")
+        {
+            isIncome = false;
+        }
+        else
+        {
+            ConsoleHelper.WriteError("Wrong input. Category not added.");
+            return;
+        }
+        
+        
+
+        account.Categories.Add(new Category(categoryName, finalColor, isIncome));
+        ConsoleHelper.WriteSuccess("Category added.");
+        
+
+
+
+
+    }
     private void AddTransaction() 
     {
         string desc = ConsoleHelper.GetInputString("Enter transaction description");

@@ -7,8 +7,10 @@ namespace Expense_Tracker
     public enum MainMenuOptions
     {
         NewTransaction = 1,
-        Transactions = 2,
-        AccountInformation = 3,
+        NewCategory = 2,
+        Transactions = 3,
+       
+        AccountInformation = 4,
         Quit = 0
     }
 
