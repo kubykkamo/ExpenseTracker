@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 
@@ -100,6 +101,25 @@ public class ExpenseTrackerApp
         }
     }
 
+    Category ChooseCategory() 
+    {
+        var categories = account.Categories;
+        account.PrintCategories();
+        int indexChoice = ConsoleHelper.GetInputNumber("Choose a category");
+        indexChoice--;
+        if (indexChoice < 0 || indexChoice >= categories.Count)
+        {
+            ConsoleHelper.WriteError("Wrong input. Transaction not added.");
+            return null;
+        }
+
+        else
+        {
+
+            return categories[indexChoice];
+        }
+
+    }
     void AddCateogry()
     {
         string categoryName = ConsoleHelper.GetInputString("Enter category name");
@@ -124,14 +144,8 @@ public class ExpenseTrackerApp
             return;
         }
         
-        
-
         account.Categories.Add(new Category(categoryName, finalColor, isIncome));
         ConsoleHelper.WriteSuccess("Category added.");
-        
-
-
-
 
     }
     private void AddTransaction() 
@@ -152,24 +166,19 @@ public class ExpenseTrackerApp
             isIncome = incomeInput == "y";
 
 
-            var categories = account.Categories;
-            account.PrintCategories();
+            
 
-
-            int indexChoice = ConsoleHelper.GetInputNumber("Enter a category");
-            indexChoice--;
-            if (indexChoice < 0 || indexChoice >= categories.Count)
+            Category chosenCategory = ChooseCategory();
+            if (chosenCategory == null)
             {
-                ConsoleHelper.WriteError("Wrong input. Transaction not added.");
                 return;
             }
 
-            Category chosenCategory = categories[indexChoice];
-
-
-            account.AddTransaction(desc, amount, isIncome, chosenCategory);
-            ConsoleHelper.WriteSuccess("Transaction added.");
-
+            else
+            {
+                account.AddTransaction(desc, amount, isIncome, chosenCategory);
+                ConsoleHelper.WriteSuccess("Transaction added.");
+            }
 
 
 
