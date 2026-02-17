@@ -40,10 +40,7 @@ public class ExpenseTrackerApp
                     break;
                 case MainMenuOptions.AccountInformation:
                     PrintAccountStatus();
-                    break;
-                
-                
-                
+                    break;                
                 case MainMenuOptions.Quit:
                     account.SaveToFile();
                     return;
@@ -106,7 +103,7 @@ public class ExpenseTrackerApp
         }
     }
 
-    bool CheckLimit(Category cat, decimal amount)
+    bool IsWithinLimit(Category cat, decimal amount)
     {
         if (cat.Limit == -1) return true;
         decimal sum = account.GetAllTransactions()
