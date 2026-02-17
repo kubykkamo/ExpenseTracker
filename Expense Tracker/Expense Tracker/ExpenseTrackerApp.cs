@@ -141,6 +141,21 @@ public class ExpenseTrackerApp
         else if (incomeBool == "n")
         {
             isIncome = false;
+            string limitBool = ConsoleHelper.GetInputString("Do you want to set a limit? (y/n)").ToLower();
+            if (limitBool == "y")
+            {
+                decimal limit = ConsoleHelper.GetInputDecimal("Enter your limit");
+                account.Categories.Add(new Category(categoryName, finalColor, isIncome, limit));
+                ConsoleHelper.WriteSuccess("Category added.");
+
+            }
+            else 
+            {
+                account.Categories.Add(new Category(categoryName, finalColor, isIncome));
+                ConsoleHelper.WriteSuccess("Category added.");
+                return;
+            }
+            
         }
         else
         {
@@ -148,8 +163,7 @@ public class ExpenseTrackerApp
             return;
         }
         
-        account.Categories.Add(new Category(categoryName, finalColor, isIncome));
-        ConsoleHelper.WriteSuccess("Category added.");
+        
 
     }
     private void AddTransaction() 

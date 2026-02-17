@@ -12,11 +12,19 @@ public class Category {
 
     public decimal Limit { get; set; }
 
-    bool isIncome { get; set; }
+    public bool isIncome { get; set; }
 
     public ConsoleColor Color { get; set; }
 
     public Category() { }
+
+    public Category(string description, ConsoleColor color, bool income, decimal limit)
+    {
+        Name = description;
+        Color = color;
+        isIncome = income;
+        Limit = limit;
+    }
     public Category(string description, ConsoleColor color, bool income)
     {
 
