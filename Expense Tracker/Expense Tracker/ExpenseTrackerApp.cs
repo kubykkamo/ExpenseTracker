@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Expense_Tracker;
@@ -103,6 +104,16 @@ public class ExpenseTrackerApp
                 Console.ReadKey();
             }
         }
+    }
+
+    bool CheckLimit(Category cat, decimal amount)
+    {
+        if (cat.Limit == -1) return true;
+        decimal sum = account.GetAllTransactions()
+            .Where(x => x.Category.Name == cat.Name)
+            .Sum (x => x.Amount);
+        sum += amount;
+        return sum <= cat.Limit;
     }
 
     Category ChooseCategory() 
