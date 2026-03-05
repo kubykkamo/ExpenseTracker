@@ -10,17 +10,25 @@ namespace Expense_Tracker;
 
 public class ExpenseTrackerApp
 {
-    public Account account = new Account("Petr Pavel");
-    
+
+    private Account _account;
+    private FileStorageService _storage = new FileStorageService();
 
     
 
     public void Run()
     {
+        
+        var loadedTransactions = _storage.LoadTransactions();
+        var loadedCategories = _storage.LoadCategories();
+        _account = new Account(loadedTransactions, loadedCategories);
+
         Console.WriteLine("--- Welcome in your expense tracker! ---");
         
         while (true)
         {
+            _storage.SaveTransactions(_account.Transactions);
+            _storage.SaveCategories(_account.Categories);
             Console.WriteLine("--- Main Menu ---");
             ConsoleHelper.PrintMenuFromEnum<MainMenuOptions>();
             Console.WriteLine("-----------------");
@@ -42,7 +50,8 @@ public class ExpenseTrackerApp
                     PrintAccountStatus();
                     break;                
                 case MainMenuOptions.Quit:
-                    account.SaveToFile();
+                    _storage.SaveTransactions(_account.Transactions);
+                    _storage.SaveCategories(_account.Categories);
                     return;
                 default:
                     ConsoleHelper.WriteError("Wrong input");
@@ -106,7 +115,7 @@ public class ExpenseTrackerApp
     bool IsWithinLimit(Category cat, decimal amount)
     {
         if (cat.Limit == -1) return true;
-        decimal sum = account.GetAllTransactions()
+        decimal sum = _account.GetAllTransactions()
             .Where(x => x.Category.Name == cat.Name)
             .Sum (x => x.Amount);
         sum += amount;
@@ -115,8 +124,8 @@ public class ExpenseTrackerApp
 
     Category ChooseCategory() 
     {
-        var categories = account.Categories;
-        account.PrintCategories();
+        var categories = _account.Categories;
+        _account.PrintCategories();
         int indexChoice = ConsoleHelper.GetInputNumber("Choose a category");
         indexChoice--;
         if (indexChoice < 0 || indexChoice >= categories.Count)
@@ -153,13 +162,13 @@ public class ExpenseTrackerApp
             if (limitBool == "y")
             {
                 decimal limit = ConsoleHelper.GetInputDecimal("Enter your limit");
-                account.Categories.Add(new Category(categoryName, finalColor, isIncome, limit));
+                _account.Categories.Add(new Category(categoryName, finalColor, isIncome, limit));
                 ConsoleHelper.WriteSuccess("Category added.");
 
             }
             else 
             {
-                account.Categories.Add(new Category(categoryName, finalColor, isIncome));
+                _account.Categories.Add(new Category(categoryName, finalColor, isIncome));
                 ConsoleHelper.WriteSuccess("Category added.");
                 return;
             }
@@ -174,13 +183,13 @@ public class ExpenseTrackerApp
         
 
     }
-    private void AddTransaction() 
+    private void AddTransaction()
     {
         string desc = ConsoleHelper.GetInputString("Enter transaction description");
         decimal amount = ConsoleHelper.GetInputDecimal("Enter transaction amount");
         bool isIncome;
 
-        
+
         string incomeInput = ConsoleHelper.GetInputString(("Is it an income? (y/n)")).ToLower();
         if (incomeInput != "y" && incomeInput != "n")
         {
@@ -192,7 +201,7 @@ public class ExpenseTrackerApp
             isIncome = incomeInput == "y";
 
 
-            
+
 
             Category chosenCategory = ChooseCategory();
             if (chosenCategory == null)
@@ -202,19 +211,26 @@ public class ExpenseTrackerApp
 
             else
             {
-                account.AddTransaction(desc, amount, isIncome, chosenCategory);
-                ConsoleHelper.WriteSuccess("Transaction added.");
+                try
+                {
+                    _account.AddTransaction(desc, amount, isIncome, chosenCategory);
+                }
+                catch (ArgumentException ex)
+                {
+                    ConsoleHelper.WriteError(ex.Message);
+
+                }
+
+
+
             }
 
-
-
         }
-            
-        }
+    }
         
     List<Transaction> GetTransactions()
     {
-        return account.GetAllTransactions();
+        return _account.GetAllTransactions();
     }
     List<Transaction> SortTransactions()
     {
@@ -244,7 +260,7 @@ public class ExpenseTrackerApp
             return;
         }
         
-        var transactionsToPrint = account.GetAllTransactions()
+        var transactionsToPrint = _account.GetAllTransactions()
             .Where(t => t.Category.Name == chosenCategory.Name)
             .OrderByDescending(t => t.Date)
             .ToList();
@@ -255,7 +271,7 @@ public class ExpenseTrackerApp
 
     private void PrintSpecificTransactions(List<Transaction> transactionsToPrint)
     {
-        account.GetAllTransactions();
+        _account.GetAllTransactions();
         if (!transactionsToPrint.Any()) ConsoleHelper.WriteError("No transactions yet.");
         else
         {
@@ -284,7 +300,7 @@ public class ExpenseTrackerApp
 
     private void PrintTransactions()
     {
-        var transactions = account.GetAllTransactions();
+        var transactions = _account.GetAllTransactions();
         if (!transactions.Any()) { ConsoleHelper.WriteError("No transactions yet."); } 
        
         else
@@ -317,10 +333,10 @@ public class ExpenseTrackerApp
 
     private void PrintAccountStatus()
     {
-        Console.WriteLine($"Name: {account.Name}");
-        Console.WriteLine($"Balance: {account.Balance} kč.");
-        Console.WriteLine($"Total income: {account.TotalIncome} kč.");
-        Console.WriteLine($"Total outcome: {account.TotalOutcome} kč. ");
+        Console.WriteLine($"Name: {_account.Name}");
+        Console.WriteLine($"Balance: {_account.Balance} kč.");
+        Console.WriteLine($"Total income: {_account.TotalIncome} kč.");
+        Console.WriteLine($"Total outcome: {_account.TotalOutcome} kč. ");
             
     }
 

@@ -33,6 +33,16 @@ public class Transaction
 
     public Transaction(string description, decimal amount, bool isIncome, Category category)
     {
+        if (amount <= 0)
+        {
+            throw new ArgumentException("Částka musí být větší než nula.");
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            throw new ArgumentException("Popis nesmí být prázdný.");
+        }
+
         Description = description;
         Amount = amount;
         Date = DateTime.Now;
@@ -47,8 +57,11 @@ public class Transaction
     public void PrintTransactionInfo() 
     {
         Console.ForegroundColor = Category.Color;
-        Console.WriteLine($"{Date.ToShortDateString()} | {Description} | {Amount} Kč | {Category.Name} ");
+        string categoryDisplayName = Category?.Name ?? CategoryName ?? "Bez kategorie";
+
+        Console.WriteLine($"{Date.ToShortDateString()} | {Description} | {Amount} Kč | {categoryDisplayName}");
         Console.ResetColor();
+        
 
     }
 }

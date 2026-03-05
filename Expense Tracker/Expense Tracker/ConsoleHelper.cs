@@ -63,8 +63,8 @@ namespace Expense_Tracker
 
         public static string GetInputString(string question)
         {
-            while (true)
-            {
+            
+ 
                 Console.WriteLine(question + ": ");
                 string input = Console.ReadLine() ?? "";
 
@@ -73,8 +73,9 @@ namespace Expense_Tracker
                     return input;
                 }
                 ConsoleHelper.WriteError("Empty input!");
+            return null;
                 
-            }
+            
         }
         
         public static void PrintMenuFromEnum<T>() where T : Enum
